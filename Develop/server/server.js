@@ -24,3 +24,12 @@ app.use(routes);
 db.once('open', () => {
   app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
 });
+
+
+mongoose.connect (
+  process.env.MONGOOSE_URI || 'mongodb://localhost:27017/book.book search engine',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+);
