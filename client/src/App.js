@@ -6,8 +6,14 @@ import SearchBooks from './pages/SearchBooks';
 import SavedBooks from './pages/SavedBooks';
 import Navbar from './components/Navbar';
 
+const client = new ApolloClient({
+  uri: '/graphql',
+  cahce: new InMemoryCache(),
+});
+
 function App() {
   return (
+  <ApolloProvider client={client}> 
     <Router>
       <>
         <Navbar />
@@ -27,6 +33,7 @@ function App() {
         </Routes>
       </>
     </Router>
+    </ApolloProvider>
   );
 }
 
