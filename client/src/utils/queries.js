@@ -25,11 +25,13 @@ export const QUERY_BOOK = gql`
     }    
     `;
 
-export const QUERY_AUTH = gql`
-    query auth {
-        auth{
-            token
-            user
-        }
+    export const QUERY_ME = gql`
+    query me {
+      me {
+        _id
+        name
+        books
+      }
     }
-    `;
+  `;
+  

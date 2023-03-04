@@ -7,9 +7,16 @@ const { typeDefs, resolvers } = require('./schemas');
 const path = require('path');
 const db = require('./config/connection');
 const routes = require('./routes');
+const { authMiddleware } = require('./utils/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context:authMiddleware,
+});
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -21,15 +28,18 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(routes);
 
-db.once('open', () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
-});
 
+//add apollo server with the GQL schema
+const startApolloServer = async(typeDefs,resolvers) => {
+  await server.start();
+  server.applyMiddleware({ app });
 
-mongoose.connect (
-  process.env.MONGOOSE_URI || 'mongodb://localhost:27017/book.book search engine',
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-);
+  db.once('open', () => {
+    app.listen(PORT, () => {
+      console.log(`API server running on port ${PORT}!`);
+      console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
+    })
+  })
+};
+
+startApolloServer(typeDefs, resolvers);

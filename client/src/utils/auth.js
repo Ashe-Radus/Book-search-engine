@@ -12,7 +12,7 @@ class AuthService {
   loggedIn() {
     // Checks if there is a saved token and it's still valid
     const token = this.getToken();
-    return !!token && !this.isTokenExpired(token); // handwaiving here
+    return token && !this.isTokenExpired(token) ? true: false; // handwaiving here
   }
 
   // check if token is expired
@@ -20,13 +20,13 @@ class AuthService {
     try {
       const decoded = decode(token);
       if (decoded.exp < Date.now() / 1000) {
-        return true;
-      } else return false;
-    } catch (err) {
+       localStorage.removeItem('id_token');
+       return true;
+      }
       return false;
     }
   }
-
+  
   getToken() {
     // Retrieves the user token from localStorage
     return localStorage.getItem('id_token');
